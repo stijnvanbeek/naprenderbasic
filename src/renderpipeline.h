@@ -6,8 +6,10 @@
 #include <rendertarget.h>
 #include <nap/core.h>
 
-namespace nap
-{
+namespace nap {
+
+	class RenderBasicService;
+
 
 	class RenderStepBase : public Resource
 	{
@@ -51,7 +53,7 @@ namespace nap
 		void perform() override { mRenderToTextureComponent->draw(); }
 
 		void registerComponent(RenderToTextureComponentInstance& component) { mRenderToTextureComponent = &component; }
-		void unregisterComponent(RenderToTextureComponentInstance& component) { mRenderToTextureComponent = nullptr; }
+		void unregisterComponent(RenderToTextureComponentInstance& component) { if (&component == mRenderToTextureComponent) mRenderToTextureComponent = nullptr; }
 
 	private:
 		RenderToTextureComponentInstance* mRenderToTextureComponent = nullptr;
@@ -65,14 +67,15 @@ namespace nap
 	public:
 		RenderPipeline(Core& core) : mCore(&core) {}
 		bool init(utility::ErrorState& error) override;
+		void onDestroy() override;
 
-		std::vector<ResourcePtr<RenderStep>> mRenderSteps; ///< Property: 'RenderSteps'
+		std::vector<ResourcePtr<RenderStepBase>> mRenderSteps; ///< Property: 'RenderSteps'
 
 		void perform();
 
 	private:
-		RenderService* mRenderService = nullptr;
 		Core* mCore = nullptr;
+		RenderBasicService* mService = nullptr;
 	};
 
 }

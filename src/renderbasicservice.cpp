@@ -1,5 +1,6 @@
 #include "renderbasicservice.h"
 
+#include <renderpipeline.h>
 #include <nap/core.h>
 
 RTTI_BEGIN_CLASS_NO_DEFAULT_CONSTRUCTOR(nap::RenderBasicService)
@@ -18,6 +19,8 @@ namespace nap
 
 	void RenderBasicService::render()
 	{
+		for (auto& pipeline : mPipelines)
+			pipeline->perform();
 	}
 
 }

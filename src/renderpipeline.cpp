@@ -1,5 +1,6 @@
 #include "renderpipeline.h"
 
+#include <renderbasicservice.h>
 #include <renderservice.h>
 #include <nap/core.h>
 
@@ -8,6 +9,9 @@ RTTI_END_CLASS
 
 RTTI_BEGIN_CLASS(nap::RenderStep)
 	RTTI_PROPERTY("RenderTarget", &nap::RenderStep::mRenderTarget, nap::rtti::EPropertyMetaData::Required)
+RTTI_END_CLASS
+
+RTTI_BEGIN_CLASS(nap::RenderToTextureStep)
 RTTI_END_CLASS
 
 RTTI_BEGIN_CLASS_NO_DEFAULT_CONSTRUCTOR(nap::RenderPipeline)
@@ -49,8 +53,15 @@ namespace nap
 
 	bool RenderPipeline::init(utility::ErrorState& error)
 	{
-		mRenderService = mCore->getService<RenderService>();
+		mService = mCore->getService<RenderBasicService>();
+		mService->registerPipeline(*this);
 		return true;
+	}
+
+
+	void RenderPipeline::onDestroy()
+	{
+		mService->unregisterPipeline(*this);
 	}
 
 

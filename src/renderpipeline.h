@@ -50,7 +50,7 @@ namespace nap {
 		RTTI_ENABLE(RenderStepBase)
 
 	public:
-		void perform() override { mRenderToTextureComponent->draw(); }
+		void perform() override { if (mRenderToTextureComponent != nullptr) mRenderToTextureComponent->draw(); }
 
 		void registerComponent(RenderToTextureComponentInstance& component) { mRenderToTextureComponent = &component; }
 		void unregisterComponent(RenderToTextureComponentInstance& component) { if (&component == mRenderToTextureComponent) mRenderToTextureComponent = nullptr; }
